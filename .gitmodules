@@ -1,3 +1,6 @@
 [submodule "solana-vote-app"]
 	path = solana-vote-app
 	url = git@github.com:idityaGE/solana-vote-app.git
+[submodule "solana-programs"]
+	path = solana-programs
+	url = git@github.com:idityaGE/solana-programs.git
