@@ -4,3 +4,6 @@
 [submodule "solana-programs"]
 	path = solana-programs
 	url = git@github.com:idityaGE/solana-programs.git
+[submodule "token-vesting-app"]
+	path = token-vesting-app
+	url = git@github.com:idityaGE/token-vesting-app.git
