@@ -6,5 +6,9 @@
  * @see https://github.com/codama-idl/codama
  */
 
-export * from './initConfig';
-export * from './initLottery';
+export * from './buyTicket';
+export * from './chooseAWinner';
+export * from './claimPrize';
+export * from './commitAWinner';
+export * from './initializeConfig';
+export * from './initializeLottery';

@@ -9,18 +9,16 @@ import {
   signTransactionMessageWithSigners,
   getProgramDerivedAddress,
   Address,
-  getU8Decoder
+  transactionToBase64WithSigners,
 } from 'gill'
 import {
   fetchTokenLottery,
-  getInitConfigInstructionAsync,
-  getInitLotteryInstructionAsync,
+  getInitializeConfigInstructionAsync,
+  getInitializeLotteryInstructionAsync,
   TOKENLOTTERY_PROGRAM_ADDRESS
 } from '../src'
 // @ts-ignore error TS2307 suggest setting `moduleResolution` but this is already configured
 import { loadKeypairSignerFromFile } from 'gill/node'
-import { TOKEN_2022_PROGRAM_ADDRESS, TOKEN_METADATA_PROGRAM_ADDRESS } from 'gill/programs'
-
 const { rpc, sendAndConfirmTransaction } = createSolanaClient({ urlOrMoniker: process.env.ANCHOR_PROVIDER_URL! })
 
 describe('tokenlottery', () => {
@@ -40,7 +38,7 @@ describe('tokenlottery', () => {
   it('should init config', async () => {
     // ARRANGE
     expect.assertions(1)
-    const ix = await getInitConfigInstructionAsync({
+    const ix = await getInitializeConfigInstructionAsync({
       payer: payer,
       end: 1760724910,
       start: 1660724910,
@@ -59,36 +57,32 @@ describe('tokenlottery', () => {
   it('should init lottery', async () => {
     // ARRANGE
     expect.assertions(1)
-    const ix = await getInitLotteryInstructionAsync({
+    const ix = await getInitializeLotteryInstructionAsync({
       payer: payer,
     });
 
     // ACT
     const signature = await sendAndConfirm({ ix, payer })
     console.log(signature)
-    
+
     // ASSERT
     expect(signature).toBeDefined()
   })
 })
 
-let latestBlockhash: Awaited<ReturnType<typeof getLatestBlockhash>> | undefined
-async function getLatestBlockhash(): Promise<Readonly<{ blockhash: Blockhash; lastValidBlockHeight: bigint }>> {
-  if (latestBlockhash) {
-    return latestBlockhash
-  }
-  return await rpc
-    .getLatestBlockhash()
-    .send()
-    .then(({ value }) => value)
-}
+
 async function sendAndConfirm({ ix, payer }: { ix: Instruction; payer: KeyPairSigner }) {
   const tx = createTransaction({
     feePayer: payer,
     instructions: [ix],
     version: 'legacy',
-    latestBlockhash: await getLatestBlockhash(),
+    latestBlockhash: await rpc.getLatestBlockhash().send().then(({ value }) => value),
   })
   const signedTransaction = await signTransactionMessageWithSigners(tx)
-  return await sendAndConfirmTransaction(signedTransaction, { skipPreflight: true, commitment: 'confirmed' })
+
+  console.log(await transactionToBase64WithSigners(signedTransaction))
+  const signature = await sendAndConfirmTransaction(signedTransaction, { skipPreflight: true, commitment: 'confirmed' })
+  console.log("Signature : ", signature)
+
+  return signature
 }

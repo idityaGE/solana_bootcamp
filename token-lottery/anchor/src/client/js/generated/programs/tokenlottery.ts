@@ -14,12 +14,16 @@ import {
   type ReadonlyUint8Array,
 } from 'gill';
 import {
-  type ParsedInitConfigInstruction,
-  type ParsedInitLotteryInstruction,
+  type ParsedBuyTicketInstruction,
+  type ParsedChooseAWinnerInstruction,
+  type ParsedClaimPrizeInstruction,
+  type ParsedCommitAWinnerInstruction,
+  type ParsedInitializeConfigInstruction,
+  type ParsedInitializeLotteryInstruction,
 } from '../instructions';
 
 export const TOKENLOTTERY_PROGRAM_ADDRESS =
-  'GkjnkEPxTcYPRXFD6jx651UVP79McRB8DssM2ABfPBpQ' as Address<'GkjnkEPxTcYPRXFD6jx651UVP79McRB8DssM2ABfPBpQ'>;
+  'dqkzsjJc7s3uJXYr6zcP2Nn1s29u9odAJsfbEYENU3v' as Address<'dqkzsjJc7s3uJXYr6zcP2Nn1s29u9odAJsfbEYENU3v'>;
 
 export enum TokenlotteryAccount {
   TokenLottery,
@@ -46,8 +50,12 @@ export function identifyTokenlotteryAccount(
 }
 
 export enum TokenlotteryInstruction {
-  InitConfig,
-  InitLottery,
+  BuyTicket,
+  ChooseAWinner,
+  ClaimPrize,
+  CommitAWinner,
+  InitializeConfig,
+  InitializeLottery,
 }
 
 export function identifyTokenlotteryInstruction(
@@ -58,23 +66,67 @@ export function identifyTokenlotteryInstruction(
     containsBytes(
       data,
       fixEncoderSize(getBytesEncoder(), 8).encode(
-        new Uint8Array([23, 235, 115, 232, 168, 96, 1, 231])
+        new Uint8Array([11, 24, 17, 193, 168, 116, 164, 169])
       ),
       0
     )
   ) {
-    return TokenlotteryInstruction.InitConfig;
+    return TokenlotteryInstruction.BuyTicket;
   }
   if (
     containsBytes(
       data,
       fixEncoderSize(getBytesEncoder(), 8).encode(
-        new Uint8Array([255, 2, 161, 251, 245, 9, 57, 232])
+        new Uint8Array([93, 141, 57, 235, 103, 131, 163, 252])
       ),
       0
     )
   ) {
-    return TokenlotteryInstruction.InitLottery;
+    return TokenlotteryInstruction.ChooseAWinner;
+  }
+  if (
+    containsBytes(
+      data,
+      fixEncoderSize(getBytesEncoder(), 8).encode(
+        new Uint8Array([157, 233, 139, 121, 246, 62, 234, 235])
+      ),
+      0
+    )
+  ) {
+    return TokenlotteryInstruction.ClaimPrize;
+  }
+  if (
+    containsBytes(
+      data,
+      fixEncoderSize(getBytesEncoder(), 8).encode(
+        new Uint8Array([142, 122, 254, 195, 220, 205, 224, 236])
+      ),
+      0
+    )
+  ) {
+    return TokenlotteryInstruction.CommitAWinner;
+  }
+  if (
+    containsBytes(
+      data,
+      fixEncoderSize(getBytesEncoder(), 8).encode(
+        new Uint8Array([208, 127, 21, 1, 194, 190, 196, 70])
+      ),
+      0
+    )
+  ) {
+    return TokenlotteryInstruction.InitializeConfig;
+  }
+  if (
+    containsBytes(
+      data,
+      fixEncoderSize(getBytesEncoder(), 8).encode(
+        new Uint8Array([113, 199, 243, 247, 73, 217, 33, 11])
+      ),
+      0
+    )
+  ) {
+    return TokenlotteryInstruction.InitializeLottery;
   }
   throw new Error(
     'The provided instruction could not be identified as a tokenlottery instruction.'
@@ -82,11 +134,23 @@ export function identifyTokenlotteryInstruction(
 }
 
 export type ParsedTokenlotteryInstruction<
-  TProgram extends string = 'GkjnkEPxTcYPRXFD6jx651UVP79McRB8DssM2ABfPBpQ',
+  TProgram extends string = 'dqkzsjJc7s3uJXYr6zcP2Nn1s29u9odAJsfbEYENU3v',
 > =
   | ({
-      instructionType: TokenlotteryInstruction.InitConfig;
-    } & ParsedInitConfigInstruction<TProgram>)
+      instructionType: TokenlotteryInstruction.BuyTicket;
+    } & ParsedBuyTicketInstruction<TProgram>)
   | ({
-      instructionType: TokenlotteryInstruction.InitLottery;
-    } & ParsedInitLotteryInstruction<TProgram>);
+      instructionType: TokenlotteryInstruction.ChooseAWinner;
+    } & ParsedChooseAWinnerInstruction<TProgram>)
+  | ({
+      instructionType: TokenlotteryInstruction.ClaimPrize;
+    } & ParsedClaimPrizeInstruction<TProgram>)
+  | ({
+      instructionType: TokenlotteryInstruction.CommitAWinner;
+    } & ParsedCommitAWinnerInstruction<TProgram>)
+  | ({
+      instructionType: TokenlotteryInstruction.InitializeConfig;
+    } & ParsedInitializeConfigInstruction<TProgram>)
+  | ({
+      instructionType: TokenlotteryInstruction.InitializeLottery;
+    } & ParsedInitializeLotteryInstruction<TProgram>);

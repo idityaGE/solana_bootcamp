@@ -39,38 +39,32 @@ import {
   type ResolvedAccount,
 } from '../shared';
 
-export const INIT_LOTTERY_DISCRIMINATOR = new Uint8Array([
-  255, 2, 161, 251, 245, 9, 57, 232,
+export const CLAIM_PRIZE_DISCRIMINATOR = new Uint8Array([
+  157, 233, 139, 121, 246, 62, 234, 235,
 ]);
 
-export function getInitLotteryDiscriminatorBytes() {
-  return fixEncoderSize(getBytesEncoder(), 8).encode(
-    INIT_LOTTERY_DISCRIMINATOR
-  );
+export function getClaimPrizeDiscriminatorBytes() {
+  return fixEncoderSize(getBytesEncoder(), 8).encode(CLAIM_PRIZE_DISCRIMINATOR);
 }
 
-export type InitLotteryInstruction<
+export type ClaimPrizeInstruction<
   TProgram extends string = typeof TOKENLOTTERY_PROGRAM_ADDRESS,
   TAccountPayer extends string | AccountMeta<string> = string,
+  TAccountTokenLottery extends string | AccountMeta<string> = string,
   TAccountCollectionMint extends string | AccountMeta<string> = string,
+  TAccountTicketMint extends string | AccountMeta<string> = string,
   TAccountMetadata extends string | AccountMeta<string> = string,
-  TAccountMasterEdition extends string | AccountMeta<string> = string,
-  TAccountCollectionTokenAccount extends string | AccountMeta<string> = string,
+  TAccountDestination extends string | AccountMeta<string> = string,
+  TAccountCollectionMetadata extends string | AccountMeta<string> = string,
   TAccountTokenProgram extends
     | string
     | AccountMeta<string> = 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA',
-  TAccountAssociatedTokenProgram extends
-    | string
-    | AccountMeta<string> = 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL',
   TAccountSystemProgram extends
     | string
     | AccountMeta<string> = '11111111111111111111111111111111',
   TAccountTokenMetadataProgram extends
     | string
     | AccountMeta<string> = 'metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s',
-  TAccountRent extends
-    | string
-    | AccountMeta<string> = 'SysvarRent111111111111111111111111111111111',
   TRemainingAccounts extends readonly AccountMeta<string>[] = [],
 > = Instruction<TProgram> &
   InstructionWithData<ReadonlyUint8Array> &
@@ -80,127 +74,127 @@ export type InitLotteryInstruction<
         ? WritableSignerAccount<TAccountPayer> &
             AccountSignerMeta<TAccountPayer>
         : TAccountPayer,
+      TAccountTokenLottery extends string
+        ? WritableAccount<TAccountTokenLottery>
+        : TAccountTokenLottery,
       TAccountCollectionMint extends string
         ? WritableAccount<TAccountCollectionMint>
         : TAccountCollectionMint,
+      TAccountTicketMint extends string
+        ? ReadonlyAccount<TAccountTicketMint>
+        : TAccountTicketMint,
       TAccountMetadata extends string
-        ? WritableAccount<TAccountMetadata>
+        ? ReadonlyAccount<TAccountMetadata>
         : TAccountMetadata,
-      TAccountMasterEdition extends string
-        ? WritableAccount<TAccountMasterEdition>
-        : TAccountMasterEdition,
-      TAccountCollectionTokenAccount extends string
-        ? WritableAccount<TAccountCollectionTokenAccount>
-        : TAccountCollectionTokenAccount,
+      TAccountDestination extends string
+        ? ReadonlyAccount<TAccountDestination>
+        : TAccountDestination,
+      TAccountCollectionMetadata extends string
+        ? WritableAccount<TAccountCollectionMetadata>
+        : TAccountCollectionMetadata,
       TAccountTokenProgram extends string
         ? ReadonlyAccount<TAccountTokenProgram>
         : TAccountTokenProgram,
-      TAccountAssociatedTokenProgram extends string
-        ? ReadonlyAccount<TAccountAssociatedTokenProgram>
-        : TAccountAssociatedTokenProgram,
       TAccountSystemProgram extends string
         ? ReadonlyAccount<TAccountSystemProgram>
         : TAccountSystemProgram,
       TAccountTokenMetadataProgram extends string
         ? ReadonlyAccount<TAccountTokenMetadataProgram>
         : TAccountTokenMetadataProgram,
-      TAccountRent extends string
-        ? ReadonlyAccount<TAccountRent>
-        : TAccountRent,
       ...TRemainingAccounts,
     ]
   >;
 
-export type InitLotteryInstructionData = { discriminator: ReadonlyUint8Array };
+export type ClaimPrizeInstructionData = { discriminator: ReadonlyUint8Array };
 
-export type InitLotteryInstructionDataArgs = {};
+export type ClaimPrizeInstructionDataArgs = {};
 
-export function getInitLotteryInstructionDataEncoder(): FixedSizeEncoder<InitLotteryInstructionDataArgs> {
+export function getClaimPrizeInstructionDataEncoder(): FixedSizeEncoder<ClaimPrizeInstructionDataArgs> {
   return transformEncoder(
     getStructEncoder([['discriminator', fixEncoderSize(getBytesEncoder(), 8)]]),
-    (value) => ({ ...value, discriminator: INIT_LOTTERY_DISCRIMINATOR })
+    (value) => ({ ...value, discriminator: CLAIM_PRIZE_DISCRIMINATOR })
   );
 }
 
-export function getInitLotteryInstructionDataDecoder(): FixedSizeDecoder<InitLotteryInstructionData> {
+export function getClaimPrizeInstructionDataDecoder(): FixedSizeDecoder<ClaimPrizeInstructionData> {
   return getStructDecoder([
     ['discriminator', fixDecoderSize(getBytesDecoder(), 8)],
   ]);
 }
 
-export function getInitLotteryInstructionDataCodec(): FixedSizeCodec<
-  InitLotteryInstructionDataArgs,
-  InitLotteryInstructionData
+export function getClaimPrizeInstructionDataCodec(): FixedSizeCodec<
+  ClaimPrizeInstructionDataArgs,
+  ClaimPrizeInstructionData
 > {
   return combineCodec(
-    getInitLotteryInstructionDataEncoder(),
-    getInitLotteryInstructionDataDecoder()
+    getClaimPrizeInstructionDataEncoder(),
+    getClaimPrizeInstructionDataDecoder()
   );
 }
 
-export type InitLotteryAsyncInput<
+export type ClaimPrizeAsyncInput<
   TAccountPayer extends string = string,
+  TAccountTokenLottery extends string = string,
   TAccountCollectionMint extends string = string,
+  TAccountTicketMint extends string = string,
   TAccountMetadata extends string = string,
-  TAccountMasterEdition extends string = string,
-  TAccountCollectionTokenAccount extends string = string,
+  TAccountDestination extends string = string,
+  TAccountCollectionMetadata extends string = string,
   TAccountTokenProgram extends string = string,
-  TAccountAssociatedTokenProgram extends string = string,
   TAccountSystemProgram extends string = string,
   TAccountTokenMetadataProgram extends string = string,
-  TAccountRent extends string = string,
 > = {
   payer: TransactionSigner<TAccountPayer>;
+  tokenLottery?: Address<TAccountTokenLottery>;
   collectionMint?: Address<TAccountCollectionMint>;
+  ticketMint: Address<TAccountTicketMint>;
   metadata?: Address<TAccountMetadata>;
-  masterEdition?: Address<TAccountMasterEdition>;
-  collectionTokenAccount?: Address<TAccountCollectionTokenAccount>;
+  destination?: Address<TAccountDestination>;
+  collectionMetadata?: Address<TAccountCollectionMetadata>;
   tokenProgram?: Address<TAccountTokenProgram>;
-  associatedTokenProgram?: Address<TAccountAssociatedTokenProgram>;
   systemProgram?: Address<TAccountSystemProgram>;
   tokenMetadataProgram?: Address<TAccountTokenMetadataProgram>;
-  rent?: Address<TAccountRent>;
 };
 
-export async function getInitLotteryInstructionAsync<
+export async function getClaimPrizeInstructionAsync<
   TAccountPayer extends string,
+  TAccountTokenLottery extends string,
   TAccountCollectionMint extends string,
+  TAccountTicketMint extends string,
   TAccountMetadata extends string,
-  TAccountMasterEdition extends string,
-  TAccountCollectionTokenAccount extends string,
+  TAccountDestination extends string,
+  TAccountCollectionMetadata extends string,
   TAccountTokenProgram extends string,
-  TAccountAssociatedTokenProgram extends string,
   TAccountSystemProgram extends string,
   TAccountTokenMetadataProgram extends string,
-  TAccountRent extends string,
   TProgramAddress extends Address = typeof TOKENLOTTERY_PROGRAM_ADDRESS,
 >(
-  input: InitLotteryAsyncInput<
+  input: ClaimPrizeAsyncInput<
     TAccountPayer,
+    TAccountTokenLottery,
     TAccountCollectionMint,
+    TAccountTicketMint,
     TAccountMetadata,
-    TAccountMasterEdition,
-    TAccountCollectionTokenAccount,
+    TAccountDestination,
+    TAccountCollectionMetadata,
     TAccountTokenProgram,
-    TAccountAssociatedTokenProgram,
     TAccountSystemProgram,
-    TAccountTokenMetadataProgram,
-    TAccountRent
+    TAccountTokenMetadataProgram
   >,
   config?: { programAddress?: TProgramAddress }
 ): Promise<
-  InitLotteryInstruction<
+  ClaimPrizeInstruction<
     TProgramAddress,
     TAccountPayer,
+    TAccountTokenLottery,
     TAccountCollectionMint,
+    TAccountTicketMint,
     TAccountMetadata,
-    TAccountMasterEdition,
-    TAccountCollectionTokenAccount,
+    TAccountDestination,
+    TAccountCollectionMetadata,
     TAccountTokenProgram,
-    TAccountAssociatedTokenProgram,
     TAccountSystemProgram,
-    TAccountTokenMetadataProgram,
-    TAccountRent
+    TAccountTokenMetadataProgram
   >
 > {
   // Program address.
@@ -209,24 +203,21 @@ export async function getInitLotteryInstructionAsync<
   // Original accounts.
   const originalAccounts = {
     payer: { value: input.payer ?? null, isWritable: true },
+    tokenLottery: { value: input.tokenLottery ?? null, isWritable: true },
     collectionMint: { value: input.collectionMint ?? null, isWritable: true },
-    metadata: { value: input.metadata ?? null, isWritable: true },
-    masterEdition: { value: input.masterEdition ?? null, isWritable: true },
-    collectionTokenAccount: {
-      value: input.collectionTokenAccount ?? null,
+    ticketMint: { value: input.ticketMint ?? null, isWritable: false },
+    metadata: { value: input.metadata ?? null, isWritable: false },
+    destination: { value: input.destination ?? null, isWritable: false },
+    collectionMetadata: {
+      value: input.collectionMetadata ?? null,
       isWritable: true,
     },
     tokenProgram: { value: input.tokenProgram ?? null, isWritable: false },
-    associatedTokenProgram: {
-      value: input.associatedTokenProgram ?? null,
-      isWritable: false,
-    },
     systemProgram: { value: input.systemProgram ?? null, isWritable: false },
     tokenMetadataProgram: {
       value: input.tokenMetadataProgram ?? null,
       isWritable: false,
     },
-    rent: { value: input.rent ?? null, isWritable: false },
   };
   const accounts = originalAccounts as Record<
     keyof typeof originalAccounts,
@@ -234,6 +225,18 @@ export async function getInitLotteryInstructionAsync<
   >;
 
   // Resolve default values.
+  if (!accounts.tokenLottery.value) {
+    accounts.tokenLottery.value = await getProgramDerivedAddress({
+      programAddress,
+      seeds: [
+        getBytesEncoder().encode(
+          new Uint8Array([
+            116, 111, 107, 101, 110, 95, 108, 111, 116, 116, 101, 114, 121,
+          ])
+        ),
+      ],
+    });
+  }
   if (!accounts.collectionMint.value) {
     accounts.collectionMint.value = await getProgramDerivedAddress({
       programAddress,
@@ -262,14 +265,27 @@ export async function getInitLotteryInstructionAsync<
         getAddressEncoder().encode(
           expectAddress(accounts.tokenMetadataProgram.value)
         ),
-        getAddressEncoder().encode(
-          expectAddress(accounts.collectionMint.value)
-        ),
+        getAddressEncoder().encode(expectAddress(accounts.ticketMint.value)),
       ],
     });
   }
-  if (!accounts.masterEdition.value) {
-    accounts.masterEdition.value = await getProgramDerivedAddress({
+  if (!accounts.tokenProgram.value) {
+    accounts.tokenProgram.value =
+      'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA' as Address<'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA'>;
+  }
+  if (!accounts.destination.value) {
+    accounts.destination.value = await getProgramDerivedAddress({
+      programAddress:
+        'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL' as Address<'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'>,
+      seeds: [
+        getAddressEncoder().encode(expectAddress(accounts.payer.value)),
+        getAddressEncoder().encode(expectAddress(accounts.tokenProgram.value)),
+        getAddressEncoder().encode(expectAddress(accounts.ticketMint.value)),
+      ],
+    });
+  }
+  if (!accounts.collectionMetadata.value) {
+    accounts.collectionMetadata.value = await getProgramDerivedAddress({
       programAddress:
         'metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s' as Address<'metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s'>,
       seeds: [
@@ -282,135 +298,107 @@ export async function getInitLotteryInstructionAsync<
         getAddressEncoder().encode(
           expectAddress(accounts.collectionMint.value)
         ),
-        getBytesEncoder().encode(
-          new Uint8Array([101, 100, 105, 116, 105, 111, 110])
-        ),
       ],
     });
-  }
-  if (!accounts.collectionTokenAccount.value) {
-    accounts.collectionTokenAccount.value = await getProgramDerivedAddress({
-      programAddress,
-      seeds: [
-        getBytesEncoder().encode(
-          new Uint8Array([
-            99, 111, 108, 108, 101, 99, 116, 105, 111, 110, 95, 116, 111, 107,
-            101, 110, 95, 97, 99, 99, 111, 117, 110, 116,
-          ])
-        ),
-      ],
-    });
-  }
-  if (!accounts.tokenProgram.value) {
-    accounts.tokenProgram.value =
-      'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA' as Address<'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA'>;
-  }
-  if (!accounts.associatedTokenProgram.value) {
-    accounts.associatedTokenProgram.value =
-      'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL' as Address<'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'>;
   }
   if (!accounts.systemProgram.value) {
     accounts.systemProgram.value =
       '11111111111111111111111111111111' as Address<'11111111111111111111111111111111'>;
-  }
-  if (!accounts.rent.value) {
-    accounts.rent.value =
-      'SysvarRent111111111111111111111111111111111' as Address<'SysvarRent111111111111111111111111111111111'>;
   }
 
   const getAccountMeta = getAccountMetaFactory(programAddress, 'programId');
   return Object.freeze({
     accounts: [
       getAccountMeta(accounts.payer),
+      getAccountMeta(accounts.tokenLottery),
       getAccountMeta(accounts.collectionMint),
+      getAccountMeta(accounts.ticketMint),
       getAccountMeta(accounts.metadata),
-      getAccountMeta(accounts.masterEdition),
-      getAccountMeta(accounts.collectionTokenAccount),
+      getAccountMeta(accounts.destination),
+      getAccountMeta(accounts.collectionMetadata),
       getAccountMeta(accounts.tokenProgram),
-      getAccountMeta(accounts.associatedTokenProgram),
       getAccountMeta(accounts.systemProgram),
       getAccountMeta(accounts.tokenMetadataProgram),
-      getAccountMeta(accounts.rent),
     ],
-    data: getInitLotteryInstructionDataEncoder().encode({}),
+    data: getClaimPrizeInstructionDataEncoder().encode({}),
     programAddress,
-  } as InitLotteryInstruction<
+  } as ClaimPrizeInstruction<
     TProgramAddress,
     TAccountPayer,
+    TAccountTokenLottery,
     TAccountCollectionMint,
+    TAccountTicketMint,
     TAccountMetadata,
-    TAccountMasterEdition,
-    TAccountCollectionTokenAccount,
+    TAccountDestination,
+    TAccountCollectionMetadata,
     TAccountTokenProgram,
-    TAccountAssociatedTokenProgram,
     TAccountSystemProgram,
-    TAccountTokenMetadataProgram,
-    TAccountRent
+    TAccountTokenMetadataProgram
   >);
 }
 
-export type InitLotteryInput<
+export type ClaimPrizeInput<
   TAccountPayer extends string = string,
+  TAccountTokenLottery extends string = string,
   TAccountCollectionMint extends string = string,
+  TAccountTicketMint extends string = string,
   TAccountMetadata extends string = string,
-  TAccountMasterEdition extends string = string,
-  TAccountCollectionTokenAccount extends string = string,
+  TAccountDestination extends string = string,
+  TAccountCollectionMetadata extends string = string,
   TAccountTokenProgram extends string = string,
-  TAccountAssociatedTokenProgram extends string = string,
   TAccountSystemProgram extends string = string,
   TAccountTokenMetadataProgram extends string = string,
-  TAccountRent extends string = string,
 > = {
   payer: TransactionSigner<TAccountPayer>;
+  tokenLottery: Address<TAccountTokenLottery>;
   collectionMint: Address<TAccountCollectionMint>;
+  ticketMint: Address<TAccountTicketMint>;
   metadata: Address<TAccountMetadata>;
-  masterEdition: Address<TAccountMasterEdition>;
-  collectionTokenAccount: Address<TAccountCollectionTokenAccount>;
+  destination: Address<TAccountDestination>;
+  collectionMetadata: Address<TAccountCollectionMetadata>;
   tokenProgram?: Address<TAccountTokenProgram>;
-  associatedTokenProgram?: Address<TAccountAssociatedTokenProgram>;
   systemProgram?: Address<TAccountSystemProgram>;
   tokenMetadataProgram?: Address<TAccountTokenMetadataProgram>;
-  rent?: Address<TAccountRent>;
 };
 
-export function getInitLotteryInstruction<
+export function getClaimPrizeInstruction<
   TAccountPayer extends string,
+  TAccountTokenLottery extends string,
   TAccountCollectionMint extends string,
+  TAccountTicketMint extends string,
   TAccountMetadata extends string,
-  TAccountMasterEdition extends string,
-  TAccountCollectionTokenAccount extends string,
+  TAccountDestination extends string,
+  TAccountCollectionMetadata extends string,
   TAccountTokenProgram extends string,
-  TAccountAssociatedTokenProgram extends string,
   TAccountSystemProgram extends string,
   TAccountTokenMetadataProgram extends string,
-  TAccountRent extends string,
   TProgramAddress extends Address = typeof TOKENLOTTERY_PROGRAM_ADDRESS,
 >(
-  input: InitLotteryInput<
+  input: ClaimPrizeInput<
     TAccountPayer,
+    TAccountTokenLottery,
     TAccountCollectionMint,
+    TAccountTicketMint,
     TAccountMetadata,
-    TAccountMasterEdition,
-    TAccountCollectionTokenAccount,
+    TAccountDestination,
+    TAccountCollectionMetadata,
     TAccountTokenProgram,
-    TAccountAssociatedTokenProgram,
     TAccountSystemProgram,
-    TAccountTokenMetadataProgram,
-    TAccountRent
+    TAccountTokenMetadataProgram
   >,
   config?: { programAddress?: TProgramAddress }
-): InitLotteryInstruction<
+): ClaimPrizeInstruction<
   TProgramAddress,
   TAccountPayer,
+  TAccountTokenLottery,
   TAccountCollectionMint,
+  TAccountTicketMint,
   TAccountMetadata,
-  TAccountMasterEdition,
-  TAccountCollectionTokenAccount,
+  TAccountDestination,
+  TAccountCollectionMetadata,
   TAccountTokenProgram,
-  TAccountAssociatedTokenProgram,
   TAccountSystemProgram,
-  TAccountTokenMetadataProgram,
-  TAccountRent
+  TAccountTokenMetadataProgram
 > {
   // Program address.
   const programAddress = config?.programAddress ?? TOKENLOTTERY_PROGRAM_ADDRESS;
@@ -418,24 +406,21 @@ export function getInitLotteryInstruction<
   // Original accounts.
   const originalAccounts = {
     payer: { value: input.payer ?? null, isWritable: true },
+    tokenLottery: { value: input.tokenLottery ?? null, isWritable: true },
     collectionMint: { value: input.collectionMint ?? null, isWritable: true },
-    metadata: { value: input.metadata ?? null, isWritable: true },
-    masterEdition: { value: input.masterEdition ?? null, isWritable: true },
-    collectionTokenAccount: {
-      value: input.collectionTokenAccount ?? null,
+    ticketMint: { value: input.ticketMint ?? null, isWritable: false },
+    metadata: { value: input.metadata ?? null, isWritable: false },
+    destination: { value: input.destination ?? null, isWritable: false },
+    collectionMetadata: {
+      value: input.collectionMetadata ?? null,
       isWritable: true,
     },
     tokenProgram: { value: input.tokenProgram ?? null, isWritable: false },
-    associatedTokenProgram: {
-      value: input.associatedTokenProgram ?? null,
-      isWritable: false,
-    },
     systemProgram: { value: input.systemProgram ?? null, isWritable: false },
     tokenMetadataProgram: {
       value: input.tokenMetadataProgram ?? null,
       isWritable: false,
     },
-    rent: { value: input.rent ?? null, isWritable: false },
   };
   const accounts = originalAccounts as Record<
     keyof typeof originalAccounts,
@@ -451,78 +436,70 @@ export function getInitLotteryInstruction<
     accounts.tokenProgram.value =
       'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA' as Address<'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA'>;
   }
-  if (!accounts.associatedTokenProgram.value) {
-    accounts.associatedTokenProgram.value =
-      'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL' as Address<'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'>;
-  }
   if (!accounts.systemProgram.value) {
     accounts.systemProgram.value =
       '11111111111111111111111111111111' as Address<'11111111111111111111111111111111'>;
-  }
-  if (!accounts.rent.value) {
-    accounts.rent.value =
-      'SysvarRent111111111111111111111111111111111' as Address<'SysvarRent111111111111111111111111111111111'>;
   }
 
   const getAccountMeta = getAccountMetaFactory(programAddress, 'programId');
   return Object.freeze({
     accounts: [
       getAccountMeta(accounts.payer),
+      getAccountMeta(accounts.tokenLottery),
       getAccountMeta(accounts.collectionMint),
+      getAccountMeta(accounts.ticketMint),
       getAccountMeta(accounts.metadata),
-      getAccountMeta(accounts.masterEdition),
-      getAccountMeta(accounts.collectionTokenAccount),
+      getAccountMeta(accounts.destination),
+      getAccountMeta(accounts.collectionMetadata),
       getAccountMeta(accounts.tokenProgram),
-      getAccountMeta(accounts.associatedTokenProgram),
       getAccountMeta(accounts.systemProgram),
       getAccountMeta(accounts.tokenMetadataProgram),
-      getAccountMeta(accounts.rent),
     ],
-    data: getInitLotteryInstructionDataEncoder().encode({}),
+    data: getClaimPrizeInstructionDataEncoder().encode({}),
     programAddress,
-  } as InitLotteryInstruction<
+  } as ClaimPrizeInstruction<
     TProgramAddress,
     TAccountPayer,
+    TAccountTokenLottery,
     TAccountCollectionMint,
+    TAccountTicketMint,
     TAccountMetadata,
-    TAccountMasterEdition,
-    TAccountCollectionTokenAccount,
+    TAccountDestination,
+    TAccountCollectionMetadata,
     TAccountTokenProgram,
-    TAccountAssociatedTokenProgram,
     TAccountSystemProgram,
-    TAccountTokenMetadataProgram,
-    TAccountRent
+    TAccountTokenMetadataProgram
   >);
 }
 
-export type ParsedInitLotteryInstruction<
+export type ParsedClaimPrizeInstruction<
   TProgram extends string = typeof TOKENLOTTERY_PROGRAM_ADDRESS,
   TAccountMetas extends readonly AccountMeta[] = readonly AccountMeta[],
 > = {
   programAddress: Address<TProgram>;
   accounts: {
     payer: TAccountMetas[0];
-    collectionMint: TAccountMetas[1];
-    metadata: TAccountMetas[2];
-    masterEdition: TAccountMetas[3];
-    collectionTokenAccount: TAccountMetas[4];
-    tokenProgram: TAccountMetas[5];
-    associatedTokenProgram: TAccountMetas[6];
-    systemProgram: TAccountMetas[7];
-    tokenMetadataProgram: TAccountMetas[8];
-    rent: TAccountMetas[9];
+    tokenLottery: TAccountMetas[1];
+    collectionMint: TAccountMetas[2];
+    ticketMint: TAccountMetas[3];
+    metadata: TAccountMetas[4];
+    destination: TAccountMetas[5];
+    collectionMetadata: TAccountMetas[6];
+    tokenProgram: TAccountMetas[7];
+    systemProgram: TAccountMetas[8];
+    tokenMetadataProgram: TAccountMetas[9];
   };
-  data: InitLotteryInstructionData;
+  data: ClaimPrizeInstructionData;
 };
 
-export function parseInitLotteryInstruction<
+export function parseClaimPrizeInstruction<
   TProgram extends string,
   TAccountMetas extends readonly AccountMeta[],
 >(
   instruction: Instruction<TProgram> &
     InstructionWithAccounts<TAccountMetas> &
     InstructionWithData<ReadonlyUint8Array>
-): ParsedInitLotteryInstruction<TProgram, TAccountMetas> {
+): ParsedClaimPrizeInstruction<TProgram, TAccountMetas> {
   if (instruction.accounts.length < 10) {
     // TODO: Coded error.
     throw new Error('Not enough accounts');
@@ -537,16 +514,16 @@ export function parseInitLotteryInstruction<
     programAddress: instruction.programAddress,
     accounts: {
       payer: getNextAccount(),
+      tokenLottery: getNextAccount(),
       collectionMint: getNextAccount(),
+      ticketMint: getNextAccount(),
       metadata: getNextAccount(),
-      masterEdition: getNextAccount(),
-      collectionTokenAccount: getNextAccount(),
+      destination: getNextAccount(),
+      collectionMetadata: getNextAccount(),
       tokenProgram: getNextAccount(),
-      associatedTokenProgram: getNextAccount(),
       systemProgram: getNextAccount(),
       tokenMetadataProgram: getNextAccount(),
-      rent: getNextAccount(),
     },
-    data: getInitLotteryInstructionDataDecoder().decode(instruction.data),
+    data: getClaimPrizeInstructionDataDecoder().decode(instruction.data),
   };
 }

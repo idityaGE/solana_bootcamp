@@ -15,8 +15,6 @@ import {
   getProgramDerivedAddress,
   getStructDecoder,
   getStructEncoder,
-  getU64Decoder,
-  getU64Encoder,
   transformEncoder,
   type AccountMeta,
   type AccountSignerMeta,
@@ -36,18 +34,21 @@ import {
 import { TOKENLOTTERY_PROGRAM_ADDRESS } from '../programs';
 import { getAccountMetaFactory, type ResolvedAccount } from '../shared';
 
-export const INIT_CONFIG_DISCRIMINATOR = new Uint8Array([
-  23, 235, 115, 232, 168, 96, 1, 231,
+export const CHOOSE_A_WINNER_DISCRIMINATOR = new Uint8Array([
+  93, 141, 57, 235, 103, 131, 163, 252,
 ]);
 
-export function getInitConfigDiscriminatorBytes() {
-  return fixEncoderSize(getBytesEncoder(), 8).encode(INIT_CONFIG_DISCRIMINATOR);
+export function getChooseAWinnerDiscriminatorBytes() {
+  return fixEncoderSize(getBytesEncoder(), 8).encode(
+    CHOOSE_A_WINNER_DISCRIMINATOR
+  );
 }
 
-export type InitConfigInstruction<
+export type ChooseAWinnerInstruction<
   TProgram extends string = typeof TOKENLOTTERY_PROGRAM_ADDRESS,
   TAccountPayer extends string | AccountMeta<string> = string,
   TAccountTokenLottery extends string | AccountMeta<string> = string,
+  TAccountRandomnessAccountData extends string | AccountMeta<string> = string,
   TAccountSystemProgram extends
     | string
     | AccountMeta<string> = '11111111111111111111111111111111',
@@ -63,6 +64,9 @@ export type InitConfigInstruction<
       TAccountTokenLottery extends string
         ? WritableAccount<TAccountTokenLottery>
         : TAccountTokenLottery,
+      TAccountRandomnessAccountData extends string
+        ? ReadonlyAccount<TAccountRandomnessAccountData>
+        : TAccountRandomnessAccountData,
       TAccountSystemProgram extends string
         ? ReadonlyAccount<TAccountSystemProgram>
         : TAccountSystemProgram,
@@ -70,80 +74,67 @@ export type InitConfigInstruction<
     ]
   >;
 
-export type InitConfigInstructionData = {
+export type ChooseAWinnerInstructionData = {
   discriminator: ReadonlyUint8Array;
-  start: bigint;
-  end: bigint;
-  price: bigint;
 };
 
-export type InitConfigInstructionDataArgs = {
-  start: number | bigint;
-  end: number | bigint;
-  price: number | bigint;
-};
+export type ChooseAWinnerInstructionDataArgs = {};
 
-export function getInitConfigInstructionDataEncoder(): FixedSizeEncoder<InitConfigInstructionDataArgs> {
+export function getChooseAWinnerInstructionDataEncoder(): FixedSizeEncoder<ChooseAWinnerInstructionDataArgs> {
   return transformEncoder(
-    getStructEncoder([
-      ['discriminator', fixEncoderSize(getBytesEncoder(), 8)],
-      ['start', getU64Encoder()],
-      ['end', getU64Encoder()],
-      ['price', getU64Encoder()],
-    ]),
-    (value) => ({ ...value, discriminator: INIT_CONFIG_DISCRIMINATOR })
+    getStructEncoder([['discriminator', fixEncoderSize(getBytesEncoder(), 8)]]),
+    (value) => ({ ...value, discriminator: CHOOSE_A_WINNER_DISCRIMINATOR })
   );
 }
 
-export function getInitConfigInstructionDataDecoder(): FixedSizeDecoder<InitConfigInstructionData> {
+export function getChooseAWinnerInstructionDataDecoder(): FixedSizeDecoder<ChooseAWinnerInstructionData> {
   return getStructDecoder([
     ['discriminator', fixDecoderSize(getBytesDecoder(), 8)],
-    ['start', getU64Decoder()],
-    ['end', getU64Decoder()],
-    ['price', getU64Decoder()],
   ]);
 }
 
-export function getInitConfigInstructionDataCodec(): FixedSizeCodec<
-  InitConfigInstructionDataArgs,
-  InitConfigInstructionData
+export function getChooseAWinnerInstructionDataCodec(): FixedSizeCodec<
+  ChooseAWinnerInstructionDataArgs,
+  ChooseAWinnerInstructionData
 > {
   return combineCodec(
-    getInitConfigInstructionDataEncoder(),
-    getInitConfigInstructionDataDecoder()
+    getChooseAWinnerInstructionDataEncoder(),
+    getChooseAWinnerInstructionDataDecoder()
   );
 }
 
-export type InitConfigAsyncInput<
+export type ChooseAWinnerAsyncInput<
   TAccountPayer extends string = string,
   TAccountTokenLottery extends string = string,
+  TAccountRandomnessAccountData extends string = string,
   TAccountSystemProgram extends string = string,
 > = {
   payer: TransactionSigner<TAccountPayer>;
   tokenLottery?: Address<TAccountTokenLottery>;
+  randomnessAccountData: Address<TAccountRandomnessAccountData>;
   systemProgram?: Address<TAccountSystemProgram>;
-  start: InitConfigInstructionDataArgs['start'];
-  end: InitConfigInstructionDataArgs['end'];
-  price: InitConfigInstructionDataArgs['price'];
 };
 
-export async function getInitConfigInstructionAsync<
+export async function getChooseAWinnerInstructionAsync<
   TAccountPayer extends string,
   TAccountTokenLottery extends string,
+  TAccountRandomnessAccountData extends string,
   TAccountSystemProgram extends string,
   TProgramAddress extends Address = typeof TOKENLOTTERY_PROGRAM_ADDRESS,
 >(
-  input: InitConfigAsyncInput<
+  input: ChooseAWinnerAsyncInput<
     TAccountPayer,
     TAccountTokenLottery,
+    TAccountRandomnessAccountData,
     TAccountSystemProgram
   >,
   config?: { programAddress?: TProgramAddress }
 ): Promise<
-  InitConfigInstruction<
+  ChooseAWinnerInstruction<
     TProgramAddress,
     TAccountPayer,
     TAccountTokenLottery,
+    TAccountRandomnessAccountData,
     TAccountSystemProgram
   >
 > {
@@ -154,15 +145,16 @@ export async function getInitConfigInstructionAsync<
   const originalAccounts = {
     payer: { value: input.payer ?? null, isWritable: true },
     tokenLottery: { value: input.tokenLottery ?? null, isWritable: true },
+    randomnessAccountData: {
+      value: input.randomnessAccountData ?? null,
+      isWritable: false,
+    },
     systemProgram: { value: input.systemProgram ?? null, isWritable: false },
   };
   const accounts = originalAccounts as Record<
     keyof typeof originalAccounts,
     ResolvedAccount
   >;
-
-  // Original args.
-  const args = { ...input };
 
   // Resolve default values.
   if (!accounts.tokenLottery.value) {
@@ -187,49 +179,51 @@ export async function getInitConfigInstructionAsync<
     accounts: [
       getAccountMeta(accounts.payer),
       getAccountMeta(accounts.tokenLottery),
+      getAccountMeta(accounts.randomnessAccountData),
       getAccountMeta(accounts.systemProgram),
     ],
-    data: getInitConfigInstructionDataEncoder().encode(
-      args as InitConfigInstructionDataArgs
-    ),
+    data: getChooseAWinnerInstructionDataEncoder().encode({}),
     programAddress,
-  } as InitConfigInstruction<
+  } as ChooseAWinnerInstruction<
     TProgramAddress,
     TAccountPayer,
     TAccountTokenLottery,
+    TAccountRandomnessAccountData,
     TAccountSystemProgram
   >);
 }
 
-export type InitConfigInput<
+export type ChooseAWinnerInput<
   TAccountPayer extends string = string,
   TAccountTokenLottery extends string = string,
+  TAccountRandomnessAccountData extends string = string,
   TAccountSystemProgram extends string = string,
 > = {
   payer: TransactionSigner<TAccountPayer>;
   tokenLottery: Address<TAccountTokenLottery>;
+  randomnessAccountData: Address<TAccountRandomnessAccountData>;
   systemProgram?: Address<TAccountSystemProgram>;
-  start: InitConfigInstructionDataArgs['start'];
-  end: InitConfigInstructionDataArgs['end'];
-  price: InitConfigInstructionDataArgs['price'];
 };
 
-export function getInitConfigInstruction<
+export function getChooseAWinnerInstruction<
   TAccountPayer extends string,
   TAccountTokenLottery extends string,
+  TAccountRandomnessAccountData extends string,
   TAccountSystemProgram extends string,
   TProgramAddress extends Address = typeof TOKENLOTTERY_PROGRAM_ADDRESS,
 >(
-  input: InitConfigInput<
+  input: ChooseAWinnerInput<
     TAccountPayer,
     TAccountTokenLottery,
+    TAccountRandomnessAccountData,
     TAccountSystemProgram
   >,
   config?: { programAddress?: TProgramAddress }
-): InitConfigInstruction<
+): ChooseAWinnerInstruction<
   TProgramAddress,
   TAccountPayer,
   TAccountTokenLottery,
+  TAccountRandomnessAccountData,
   TAccountSystemProgram
 > {
   // Program address.
@@ -239,15 +233,16 @@ export function getInitConfigInstruction<
   const originalAccounts = {
     payer: { value: input.payer ?? null, isWritable: true },
     tokenLottery: { value: input.tokenLottery ?? null, isWritable: true },
+    randomnessAccountData: {
+      value: input.randomnessAccountData ?? null,
+      isWritable: false,
+    },
     systemProgram: { value: input.systemProgram ?? null, isWritable: false },
   };
   const accounts = originalAccounts as Record<
     keyof typeof originalAccounts,
     ResolvedAccount
   >;
-
-  // Original args.
-  const args = { ...input };
 
   // Resolve default values.
   if (!accounts.systemProgram.value) {
@@ -260,21 +255,21 @@ export function getInitConfigInstruction<
     accounts: [
       getAccountMeta(accounts.payer),
       getAccountMeta(accounts.tokenLottery),
+      getAccountMeta(accounts.randomnessAccountData),
       getAccountMeta(accounts.systemProgram),
     ],
-    data: getInitConfigInstructionDataEncoder().encode(
-      args as InitConfigInstructionDataArgs
-    ),
+    data: getChooseAWinnerInstructionDataEncoder().encode({}),
     programAddress,
-  } as InitConfigInstruction<
+  } as ChooseAWinnerInstruction<
     TProgramAddress,
     TAccountPayer,
     TAccountTokenLottery,
+    TAccountRandomnessAccountData,
     TAccountSystemProgram
   >);
 }
 
-export type ParsedInitConfigInstruction<
+export type ParsedChooseAWinnerInstruction<
   TProgram extends string = typeof TOKENLOTTERY_PROGRAM_ADDRESS,
   TAccountMetas extends readonly AccountMeta[] = readonly AccountMeta[],
 > = {
@@ -282,20 +277,21 @@ export type ParsedInitConfigInstruction<
   accounts: {
     payer: TAccountMetas[0];
     tokenLottery: TAccountMetas[1];
-    systemProgram: TAccountMetas[2];
+    randomnessAccountData: TAccountMetas[2];
+    systemProgram: TAccountMetas[3];
   };
-  data: InitConfigInstructionData;
+  data: ChooseAWinnerInstructionData;
 };
 
-export function parseInitConfigInstruction<
+export function parseChooseAWinnerInstruction<
   TProgram extends string,
   TAccountMetas extends readonly AccountMeta[],
 >(
   instruction: Instruction<TProgram> &
     InstructionWithAccounts<TAccountMetas> &
     InstructionWithData<ReadonlyUint8Array>
-): ParsedInitConfigInstruction<TProgram, TAccountMetas> {
-  if (instruction.accounts.length < 3) {
+): ParsedChooseAWinnerInstruction<TProgram, TAccountMetas> {
+  if (instruction.accounts.length < 4) {
     // TODO: Coded error.
     throw new Error('Not enough accounts');
   }
@@ -310,8 +306,9 @@ export function parseInitConfigInstruction<
     accounts: {
       payer: getNextAccount(),
       tokenLottery: getNextAccount(),
+      randomnessAccountData: getNextAccount(),
       systemProgram: getNextAccount(),
     },
-    data: getInitConfigInstructionDataDecoder().decode(instruction.data),
+    data: getChooseAWinnerInstructionDataDecoder().decode(instruction.data),
   };
 }

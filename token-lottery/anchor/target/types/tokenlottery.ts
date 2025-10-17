@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/tokenlottery.json`.
  */
 export type Tokenlottery = {
-  "address": "GkjnkEPxTcYPRXFD6jx651UVP79McRB8DssM2ABfPBpQ",
+  "address": "dqkzsjJc7s3uJXYr6zcP2Nn1s29u9odAJsfbEYENU3v",
   "metadata": {
     "name": "tokenlottery",
     "version": "0.1.0",
@@ -14,16 +14,663 @@ export type Tokenlottery = {
   },
   "instructions": [
     {
-      "name": "initConfig",
+      "name": "buyTicket",
       "discriminator": [
-        23,
-        235,
-        115,
-        232,
+        11,
+        24,
+        17,
+        193,
         168,
-        96,
+        116,
+        164,
+        169
+      ],
+      "accounts": [
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "tokenLottery",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  116,
+                  111,
+                  107,
+                  101,
+                  110,
+                  95,
+                  108,
+                  111,
+                  116,
+                  116,
+                  101,
+                  114,
+                  121
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "ticketMint",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "token_lottery.ticket_num",
+                "account": "tokenLottery"
+              }
+            ]
+          }
+        },
+        {
+          "name": "destination",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "payer"
+              },
+              {
+                "kind": "account",
+                "path": "tokenProgram"
+              },
+              {
+                "kind": "account",
+                "path": "ticketMint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "metadata",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  101,
+                  116,
+                  97,
+                  100,
+                  97,
+                  116,
+                  97
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "tokenMetadataProgram"
+              },
+              {
+                "kind": "account",
+                "path": "ticketMint"
+              }
+            ],
+            "program": {
+              "kind": "account",
+              "path": "tokenMetadataProgram"
+            }
+          }
+        },
+        {
+          "name": "masterEdition",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  101,
+                  116,
+                  97,
+                  100,
+                  97,
+                  116,
+                  97
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "tokenMetadataProgram"
+              },
+              {
+                "kind": "account",
+                "path": "ticketMint"
+              },
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  100,
+                  105,
+                  116,
+                  105,
+                  111,
+                  110
+                ]
+              }
+            ],
+            "program": {
+              "kind": "account",
+              "path": "tokenMetadataProgram"
+            }
+          }
+        },
+        {
+          "name": "collectionMetadata",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  101,
+                  116,
+                  97,
+                  100,
+                  97,
+                  116,
+                  97
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "tokenMetadataProgram"
+              },
+              {
+                "kind": "account",
+                "path": "collectionMint"
+              }
+            ],
+            "program": {
+              "kind": "account",
+              "path": "tokenMetadataProgram"
+            }
+          }
+        },
+        {
+          "name": "collectionMasterEdition",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  101,
+                  116,
+                  97,
+                  100,
+                  97,
+                  116,
+                  97
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "tokenMetadataProgram"
+              },
+              {
+                "kind": "account",
+                "path": "collectionMint"
+              },
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  100,
+                  105,
+                  116,
+                  105,
+                  111,
+                  110
+                ]
+              }
+            ],
+            "program": {
+              "kind": "account",
+              "path": "tokenMetadataProgram"
+            }
+          }
+        },
+        {
+          "name": "collectionMint",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  108,
+                  108,
+                  101,
+                  99,
+                  116,
+                  105,
+                  111,
+                  110,
+                  95,
+                  109,
+                  105,
+                  110,
+                  116
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "associatedTokenProgram",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
+          "name": "tokenProgram"
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "tokenMetadataProgram",
+          "address": "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
+        },
+        {
+          "name": "rent",
+          "address": "SysvarRent111111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "chooseAWinner",
+      "discriminator": [
+        93,
+        141,
+        57,
+        235,
+        103,
+        131,
+        163,
+        252
+      ],
+      "accounts": [
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "tokenLottery",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  116,
+                  111,
+                  107,
+                  101,
+                  110,
+                  95,
+                  108,
+                  111,
+                  116,
+                  116,
+                  101,
+                  114,
+                  121
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "randomnessAccountData"
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "claimPrize",
+      "discriminator": [
+        157,
+        233,
+        139,
+        121,
+        246,
+        62,
+        234,
+        235
+      ],
+      "accounts": [
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "tokenLottery",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  116,
+                  111,
+                  107,
+                  101,
+                  110,
+                  95,
+                  108,
+                  111,
+                  116,
+                  116,
+                  101,
+                  114,
+                  121
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "collectionMint",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  108,
+                  108,
+                  101,
+                  99,
+                  116,
+                  105,
+                  111,
+                  110,
+                  95,
+                  109,
+                  105,
+                  110,
+                  116
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "ticketMint",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "token_lottery.winner",
+                "account": "tokenLottery"
+              }
+            ]
+          }
+        },
+        {
+          "name": "metadata",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  101,
+                  116,
+                  97,
+                  100,
+                  97,
+                  116,
+                  97
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "tokenMetadataProgram"
+              },
+              {
+                "kind": "account",
+                "path": "ticketMint"
+              }
+            ],
+            "program": {
+              "kind": "account",
+              "path": "tokenMetadataProgram"
+            }
+          }
+        },
+        {
+          "name": "destination",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "payer"
+              },
+              {
+                "kind": "account",
+                "path": "tokenProgram"
+              },
+              {
+                "kind": "account",
+                "path": "ticketMint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "collectionMetadata",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  101,
+                  116,
+                  97,
+                  100,
+                  97,
+                  116,
+                  97
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "tokenMetadataProgram"
+              },
+              {
+                "kind": "account",
+                "path": "collectionMint"
+              }
+            ],
+            "program": {
+              "kind": "account",
+              "path": "tokenMetadataProgram"
+            }
+          }
+        },
+        {
+          "name": "tokenProgram"
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "tokenMetadataProgram",
+          "address": "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "commitAWinner",
+      "discriminator": [
+        142,
+        122,
+        254,
+        195,
+        220,
+        205,
+        224,
+        236
+      ],
+      "accounts": [
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "tokenLottery",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  116,
+                  111,
+                  107,
+                  101,
+                  110,
+                  95,
+                  108,
+                  111,
+                  116,
+                  116,
+                  101,
+                  114,
+                  121
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "randomnessAccountData"
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "initializeConfig",
+      "discriminator": [
+        208,
+        127,
+        21,
         1,
-        231
+        194,
+        190,
+        196,
+        70
       ],
       "accounts": [
         {
@@ -78,16 +725,16 @@ export type Tokenlottery = {
       ]
     },
     {
-      "name": "initLottery",
+      "name": "initializeLottery",
       "discriminator": [
-        255,
-        2,
-        161,
-        251,
-        245,
-        9,
-        57,
-        232
+        113,
+        199,
+        243,
+        247,
+        73,
+        217,
+        33,
+        11
       ],
       "accounts": [
         {
@@ -125,81 +772,11 @@ export type Tokenlottery = {
         },
         {
           "name": "metadata",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  109,
-                  101,
-                  116,
-                  97,
-                  100,
-                  97,
-                  116,
-                  97
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "tokenMetadataProgram"
-              },
-              {
-                "kind": "account",
-                "path": "collectionMint"
-              }
-            ],
-            "program": {
-              "kind": "account",
-              "path": "tokenMetadataProgram"
-            }
-          }
+          "writable": true
         },
         {
           "name": "masterEdition",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  109,
-                  101,
-                  116,
-                  97,
-                  100,
-                  97,
-                  116,
-                  97
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "tokenMetadataProgram"
-              },
-              {
-                "kind": "account",
-                "path": "collectionMint"
-              },
-              {
-                "kind": "const",
-                "value": [
-                  101,
-                  100,
-                  105,
-                  116,
-                  105,
-                  111,
-                  110
-                ]
-              }
-            ],
-            "program": {
-              "kind": "account",
-              "path": "tokenMetadataProgram"
-            }
-          }
+          "writable": true
         },
         {
           "name": "collectionTokenAccount",
@@ -274,6 +851,58 @@ export type Tokenlottery = {
         61,
         218
       ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "incorrectRandomnessAccount",
+      "msg": "Incorrect randomness account"
+    },
+    {
+      "code": 6001,
+      "name": "lotteryNotCompleted",
+      "msg": "Lottery not completed"
+    },
+    {
+      "code": 6002,
+      "name": "lotteryNotOpen",
+      "msg": "Lottery is not open"
+    },
+    {
+      "code": 6003,
+      "name": "notAuthorized",
+      "msg": "Not authorized"
+    },
+    {
+      "code": 6004,
+      "name": "randomnessAlreadyRevealed",
+      "msg": "Randomness already revealed"
+    },
+    {
+      "code": 6005,
+      "name": "randomnessNotResolved",
+      "msg": "Randomness not resolved"
+    },
+    {
+      "code": 6006,
+      "name": "winnerNotChosen",
+      "msg": "Winner not chosen"
+    },
+    {
+      "code": 6007,
+      "name": "winnerChosen",
+      "msg": "Winner already chosen"
+    },
+    {
+      "code": 6008,
+      "name": "notVerifiedTicket",
+      "msg": "Ticket is not verified"
+    },
+    {
+      "code": 6009,
+      "name": "incorrectTicket",
+      "msg": "Incorrect ticket"
     }
   ],
   "types": [
