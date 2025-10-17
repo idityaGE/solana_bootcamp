@@ -14,81 +14,16 @@ export type Tokenlottery = {
   },
   "instructions": [
     {
-      "name": "close",
+      "name": "initConfig",
       "discriminator": [
-        98,
-        165,
-        201,
-        177,
-        108,
-        65,
-        206,
-        96
-      ],
-      "accounts": [
-        {
-          "name": "payer",
-          "writable": true,
-          "signer": true
-        },
-        {
-          "name": "tokenlottery",
-          "writable": true
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "decrement",
-      "discriminator": [
-        106,
-        227,
+        23,
+        235,
+        115,
+        232,
         168,
-        59,
-        248,
-        27,
-        150,
-        101
-      ],
-      "accounts": [
-        {
-          "name": "tokenlottery",
-          "writable": true
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "increment",
-      "discriminator": [
-        11,
-        18,
-        104,
-        9,
-        104,
-        174,
-        59,
-        33
-      ],
-      "accounts": [
-        {
-          "name": "tokenlottery",
-          "writable": true
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "initialize",
-      "discriminator": [
-        175,
-        175,
-        109,
-        31,
-        13,
-        152,
-        155,
-        237
+        96,
+        1,
+        231
       ],
       "accounts": [
         {
@@ -97,70 +32,315 @@ export type Tokenlottery = {
           "signer": true
         },
         {
-          "name": "tokenlottery",
+          "name": "tokenLottery",
           "writable": true,
-          "signer": true
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  116,
+                  111,
+                  107,
+                  101,
+                  110,
+                  95,
+                  108,
+                  111,
+                  116,
+                  116,
+                  101,
+                  114,
+                  121
+                ]
+              }
+            ]
+          }
         },
         {
           "name": "systemProgram",
           "address": "11111111111111111111111111111111"
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "start",
+          "type": "u64"
+        },
+        {
+          "name": "end",
+          "type": "u64"
+        },
+        {
+          "name": "price",
+          "type": "u64"
+        }
+      ]
     },
     {
-      "name": "set",
+      "name": "initLottery",
       "discriminator": [
-        198,
-        51,
-        53,
-        241,
-        116,
-        29,
-        126,
-        194
+        255,
+        2,
+        161,
+        251,
+        245,
+        9,
+        57,
+        232
       ],
       "accounts": [
         {
-          "name": "tokenlottery",
-          "writable": true
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "collectionMint",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  108,
+                  108,
+                  101,
+                  99,
+                  116,
+                  105,
+                  111,
+                  110,
+                  95,
+                  109,
+                  105,
+                  110,
+                  116
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "metadata",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  101,
+                  116,
+                  97,
+                  100,
+                  97,
+                  116,
+                  97
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "tokenMetadataProgram"
+              },
+              {
+                "kind": "account",
+                "path": "collectionMint"
+              }
+            ],
+            "program": {
+              "kind": "account",
+              "path": "tokenMetadataProgram"
+            }
+          }
+        },
+        {
+          "name": "masterEdition",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  101,
+                  116,
+                  97,
+                  100,
+                  97,
+                  116,
+                  97
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "tokenMetadataProgram"
+              },
+              {
+                "kind": "account",
+                "path": "collectionMint"
+              },
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  100,
+                  105,
+                  116,
+                  105,
+                  111,
+                  110
+                ]
+              }
+            ],
+            "program": {
+              "kind": "account",
+              "path": "tokenMetadataProgram"
+            }
+          }
+        },
+        {
+          "name": "collectionTokenAccount",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  108,
+                  108,
+                  101,
+                  99,
+                  116,
+                  105,
+                  111,
+                  110,
+                  95,
+                  116,
+                  111,
+                  107,
+                  101,
+                  110,
+                  95,
+                  97,
+                  99,
+                  99,
+                  111,
+                  117,
+                  110,
+                  116
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "tokenProgram"
+        },
+        {
+          "name": "associatedTokenProgram",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "tokenMetadataProgram",
+          "address": "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
+        },
+        {
+          "name": "rent",
+          "address": "SysvarRent111111111111111111111111111111111"
         }
       ],
-      "args": [
-        {
-          "name": "value",
-          "type": "u8"
-        }
-      ]
+      "args": []
     }
   ],
   "accounts": [
     {
-      "name": "tokenlottery",
+      "name": "tokenLottery",
       "discriminator": [
-        74,
+        219,
+        174,
+        104,
         58,
-        192,
-        252,
-        195,
-        32,
-        241,
-        219
+        76,
+        30,
+        61,
+        218
       ]
     }
   ],
   "types": [
     {
-      "name": "tokenlottery",
+      "name": "tokenLottery",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "count",
+            "name": "bump",
             "type": "u8"
+          },
+          {
+            "name": "winner",
+            "type": "u64"
+          },
+          {
+            "name": "winnerChosen",
+            "type": "bool"
+          },
+          {
+            "name": "lotteryStart",
+            "type": "u64"
+          },
+          {
+            "name": "lotteryEnd",
+            "type": "u64"
+          },
+          {
+            "name": "lotteryPotAmount",
+            "type": "u64"
+          },
+          {
+            "name": "ticketNum",
+            "type": "u64"
+          },
+          {
+            "name": "price",
+            "type": "u64"
+          },
+          {
+            "name": "randomnessAccount",
+            "type": "pubkey"
+          },
+          {
+            "name": "authority",
+            "type": "pubkey"
           }
         ]
       }
+    }
+  ],
+  "constants": [
+    {
+      "name": "name",
+      "type": "string",
+      "value": "\"Token Lottery Ticket #\""
+    },
+    {
+      "name": "symbol",
+      "type": "string",
+      "value": "\"TICKET\""
+    },
+    {
+      "name": "uri",
+      "type": "string",
+      "value": "\"Token Lottery\""
     }
   ]
 };

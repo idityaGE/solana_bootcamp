@@ -14,18 +14,15 @@ import {
   type ReadonlyUint8Array,
 } from 'gill';
 import {
-  type ParsedCloseInstruction,
-  type ParsedDecrementInstruction,
-  type ParsedIncrementInstruction,
-  type ParsedInitializeInstruction,
-  type ParsedSetInstruction,
+  type ParsedInitConfigInstruction,
+  type ParsedInitLotteryInstruction,
 } from '../instructions';
 
 export const TOKENLOTTERY_PROGRAM_ADDRESS =
   'GkjnkEPxTcYPRXFD6jx651UVP79McRB8DssM2ABfPBpQ' as Address<'GkjnkEPxTcYPRXFD6jx651UVP79McRB8DssM2ABfPBpQ'>;
 
 export enum TokenlotteryAccount {
-  Tokenlottery,
+  TokenLottery,
 }
 
 export function identifyTokenlotteryAccount(
@@ -36,12 +33,12 @@ export function identifyTokenlotteryAccount(
     containsBytes(
       data,
       fixEncoderSize(getBytesEncoder(), 8).encode(
-        new Uint8Array([74, 58, 192, 252, 195, 32, 241, 219])
+        new Uint8Array([219, 174, 104, 58, 76, 30, 61, 218])
       ),
       0
     )
   ) {
-    return TokenlotteryAccount.Tokenlottery;
+    return TokenlotteryAccount.TokenLottery;
   }
   throw new Error(
     'The provided account could not be identified as a tokenlottery account.'
@@ -49,11 +46,8 @@ export function identifyTokenlotteryAccount(
 }
 
 export enum TokenlotteryInstruction {
-  Close,
-  Decrement,
-  Increment,
-  Initialize,
-  Set,
+  InitConfig,
+  InitLottery,
 }
 
 export function identifyTokenlotteryInstruction(
@@ -64,56 +58,23 @@ export function identifyTokenlotteryInstruction(
     containsBytes(
       data,
       fixEncoderSize(getBytesEncoder(), 8).encode(
-        new Uint8Array([98, 165, 201, 177, 108, 65, 206, 96])
+        new Uint8Array([23, 235, 115, 232, 168, 96, 1, 231])
       ),
       0
     )
   ) {
-    return TokenlotteryInstruction.Close;
+    return TokenlotteryInstruction.InitConfig;
   }
   if (
     containsBytes(
       data,
       fixEncoderSize(getBytesEncoder(), 8).encode(
-        new Uint8Array([106, 227, 168, 59, 248, 27, 150, 101])
+        new Uint8Array([255, 2, 161, 251, 245, 9, 57, 232])
       ),
       0
     )
   ) {
-    return TokenlotteryInstruction.Decrement;
-  }
-  if (
-    containsBytes(
-      data,
-      fixEncoderSize(getBytesEncoder(), 8).encode(
-        new Uint8Array([11, 18, 104, 9, 104, 174, 59, 33])
-      ),
-      0
-    )
-  ) {
-    return TokenlotteryInstruction.Increment;
-  }
-  if (
-    containsBytes(
-      data,
-      fixEncoderSize(getBytesEncoder(), 8).encode(
-        new Uint8Array([175, 175, 109, 31, 13, 152, 155, 237])
-      ),
-      0
-    )
-  ) {
-    return TokenlotteryInstruction.Initialize;
-  }
-  if (
-    containsBytes(
-      data,
-      fixEncoderSize(getBytesEncoder(), 8).encode(
-        new Uint8Array([198, 51, 53, 241, 116, 29, 126, 194])
-      ),
-      0
-    )
-  ) {
-    return TokenlotteryInstruction.Set;
+    return TokenlotteryInstruction.InitLottery;
   }
   throw new Error(
     'The provided instruction could not be identified as a tokenlottery instruction.'
@@ -124,17 +85,8 @@ export type ParsedTokenlotteryInstruction<
   TProgram extends string = 'GkjnkEPxTcYPRXFD6jx651UVP79McRB8DssM2ABfPBpQ',
 > =
   | ({
-      instructionType: TokenlotteryInstruction.Close;
-    } & ParsedCloseInstruction<TProgram>)
+      instructionType: TokenlotteryInstruction.InitConfig;
+    } & ParsedInitConfigInstruction<TProgram>)
   | ({
-      instructionType: TokenlotteryInstruction.Decrement;
-    } & ParsedDecrementInstruction<TProgram>)
-  | ({
-      instructionType: TokenlotteryInstruction.Increment;
-    } & ParsedIncrementInstruction<TProgram>)
-  | ({
-      instructionType: TokenlotteryInstruction.Initialize;
-    } & ParsedInitializeInstruction<TProgram>)
-  | ({
-      instructionType: TokenlotteryInstruction.Set;
-    } & ParsedSetInstruction<TProgram>);
+      instructionType: TokenlotteryInstruction.InitLottery;
+    } & ParsedInitLotteryInstruction<TProgram>);

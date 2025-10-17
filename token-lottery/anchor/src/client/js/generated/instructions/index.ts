@@ -6,8 +6,5 @@
  * @see https://github.com/codama-idl/codama
  */
 
-export * from './close';
-export * from './decrement';
-export * from './increment';
-export * from './initialize';
-export * from './set';
+export * from './initConfig';
+export * from './initLottery';
